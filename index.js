@@ -1,24 +1,36 @@
 const express = require('express');
 const Joi = require('joi');
+const Realm = require('realm');
 const app = express();
+
+const GenreSchema = {
+    name: 'Genre',
+    primaryKey: 'id',
+    properties: {
+        id: 'int',
+        name: 'string',
+        created_at: {type: 'date', default: Date()}
+    }
+};
+
+const genreRealm = new Realm({
+    path: "vidly.realm",
+    schema: [GenreSchema],
+    schemaVersion: 2
+});
 
 //Enable JSON body parsing
 app.use(express.json());
-
-const genres = [
-    {id: 1, name: "Action"},
-    {id: 2, name: "Horror"},
-    {id: 3, name: "Adventure"},
-    {id: 4, name: "Drama"},
-];
 
 app.get('/', (req, resp) => {
     resp.send('Welcome to Vidly API');
 });
 
+
 //GET
 app.get('/api/genres', (req, resp) => {
-    resp.send(genres)
+    const data = {genres: Array.from(genreRealm.objects("Genre"))};
+    resp.send(data);
 });
 
 
@@ -30,12 +42,16 @@ app.post('/api/genres', (req, resp) => {
         return resp.status(400).send(error.details[0].message);
     }
 
+    const genres = genreRealm.objects('Genre').sorted('id', true);
+    const newId = parseInt(genres[0].id) + 1;
     const newGenre = {
-        id: genres.length + 1,
+        id: newId,
         name: req.body.name
     };
 
-    genres.push(newGenre);
+    genreRealm.write(() => {
+        genreRealm.create('Genre', newGenre);
+    });
     resp.send(newGenre);
 });
 
@@ -44,7 +60,9 @@ app.post('/api/genres', (req, resp) => {
 app.put('/api/genres/:id', (req, resp) => {
 
     //Checking if the genre exist
-    const genre = genres.find(genre => genre.id === parseInt(req.params.id));
+    //const genre = genres.find(genre => genre.id === parseInt(req.params.id));
+    const genre = genreRealm
+        .objectForPrimaryKey('Genre', parseInt(req.params.id));
 
     if (!genre) {
         return resp.status(404).send(`Invalid genre ID ${req.params.id}`);
@@ -56,24 +74,31 @@ app.put('/api/genres/:id', (req, resp) => {
     }
 
     //Updates
-    genre.name = req.body.name;
+    genreRealm.write(() => {
+        genre.name = req.body.name;
+    });
+
     resp.send(genre);
 });
 
 //DELETE
-app.delete('/api/genres/:id', (req,resp) => {
+app.delete('/api/genres/:id', (req, resp) => {
 
     //Checking if the genre exist
-    const genre = genres.find(genre => genre.id === parseInt(req.params.id));
+    const genre = genreRealm.objectForPrimaryKey('Genre', parseInt(req.params.id));
 
     if (!genre) {
         return resp.status(404).send(`Invalid genre ID ${req.params.id}`);
     }
 
-    const gIndex = genres.indexOf(genre);
-    genres.splice(gIndex, 1);
+    //Copy object
+    const genreJsonString = JSON.stringify(genre);
 
-    resp.send(genre);
+    genreRealm.write(()=>{
+       genreRealm.delete(genre);
+    });
+
+    resp.send(JSON.parse(genreJsonString));
 });
 
 
