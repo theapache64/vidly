@@ -42,8 +42,8 @@ app.post('/api/genres', (req, resp) => {
         return resp.status(400).send(error.details[0].message);
     }
 
-    const genres = genreRealm.objects('Genre').sorted('id', true);
-    const newId = parseInt(genres[0].id) + 1;
+    const lastGenre= genreRealm.objects('Genre').sorted('id', true)[0];
+    const newId =  lastGenre ? parseInt(lastGenre.id) + 1 : 1;
     const newGenre = {
         id: newId,
         name: req.body.name
