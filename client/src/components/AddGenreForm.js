@@ -1,7 +1,9 @@
 // @flow
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {addGenre} from '../redux/actions/genresActions';
 
-export default class AddGenreForm extends Component {
+class AddGenreForm extends Component {
 
     constructor(props) {
         super(props);
@@ -13,14 +15,22 @@ export default class AddGenreForm extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
+        this.props.addGenre(this.state.name);
     };
 
     onChangeInput = (e) => {
-        console.log(e.target.value);
         this.setState({
             name: e.target.value
         })
     };
+
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.newGenre){
+            this.setState({name : ''})
+        }
+    }
+
 
     render() {
         return (
@@ -33,3 +43,15 @@ export default class AddGenreForm extends Component {
         );
     }
 }
+
+const mapDispatchToProps = {
+    addGenre
+};
+
+const mapStateToProps = (state) => {
+    return {
+        newGenre : state.genres.newGenre
+    }
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(AddGenreForm);
