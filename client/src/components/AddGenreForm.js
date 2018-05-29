@@ -1,13 +1,13 @@
 // @flow
 import React, {Component} from 'react';
 
-export default class AddGenreForm extends Component{
+export default class AddGenreForm extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            name : ''
+            name: ''
         }
     }
 
@@ -15,13 +15,14 @@ export default class AddGenreForm extends Component{
         e.preventDefault();
     };
 
-    onChangeInput = (e) =>{
+    onChangeInput = (e) => {
+        console.log(e.target.value);
         this.setState({
-            name : e.target.value
+            name: e.target.value
         })
     };
 
-    render(){
+    render() {
         return (
             <div>
                 <form onSubmit={this.onSubmit}>

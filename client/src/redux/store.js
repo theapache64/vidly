@@ -1,5 +1,5 @@
 // @flow
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
 import rootReducer from './reducers';
 import axios from 'axios';
 import thunk from 'redux-thunk';
@@ -10,5 +10,5 @@ const axiosClient = axios.create({
     responseType: 'json'
 });
 
-const store = createStore(rootReducer,{},applyMiddleware(thunk,axiosMiddleware(axiosClient)));
+const store = createStore(rootReducer,{},compose(applyMiddleware(thunk,axiosMiddleware(axiosClient)),window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
 export default store;

@@ -10,6 +10,8 @@ const initialState = {
 //Reducer
 export default function reducer(state = initialState, action) {
 
+    console.log(action);
+
     switch (action.type) {
 
         case GET_GENRES_SUCCESS:
@@ -25,7 +27,7 @@ export default function reducer(state = initialState, action) {
 }
 
 //Action
-export const loadGenres = ()=>  {
+export const loadGenres = () =>  {
     console.log('Loading genres');
     return {
         type: GET_GENRES,
