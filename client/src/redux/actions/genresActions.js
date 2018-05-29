@@ -60,6 +60,7 @@ export default function reducer(state = initialState, action) {
         case DELETE_GENRES_SUCCESS:
             return {
                 ...state,
+                //Deleting item using filter. SO MAGIC :D
                 genres: state.genres.filter(genre => genre.id !== action.payload.data.id),
                 errorMessage: null
             };

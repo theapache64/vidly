@@ -12,8 +12,8 @@ class GenresList extends Component {
             return this.props.genres.map(genre => {
                 return (
                     <li key={genre.id}>{genre.name}
-                        <button onClick={() => this.onEditGenre(genre)}>[/]</button>
-                        <button onClick={()=>this.onDeleteGenre(genre)}>[X]</button>
+                         <a href="#edit" onClick={() => this.onEditGenre(genre)}>[/]</a>
+                        <a href="#delete" onClick={()=>this.onDeleteGenre(genre)}>[X]</a>
                     </li>
                 )
             });
@@ -22,7 +22,9 @@ class GenresList extends Component {
 
     onEditGenre = (genre) => {
         const newGenreName = prompt('Enter new genre name', genre.name);
-        this.props.editGenre(genre.id, newGenreName)
+        if(newGenreName){
+            this.props.editGenre(genre.id, newGenreName)
+        }
     };
 
     onDeleteGenre = (genre) =>{
