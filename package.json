@@ -2,15 +2,18 @@
   "name": "vidly",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client": "cd client && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
     "joi": "^13.3.0",
-    "realm": "^2.6.0"
+    "realm": "^2.6.0",
+    "concurrently": "^3.5.0"
   }
 }
