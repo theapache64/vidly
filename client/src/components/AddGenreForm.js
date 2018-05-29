@@ -26,8 +26,8 @@ class AddGenreForm extends Component {
 
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.newGenre){
-            this.setState({name : ''})
+        if (this.props.genres.length !== nextProps.genres.length) {
+            this.setState({name: ''})
         }
     }
 
@@ -39,7 +39,7 @@ class AddGenreForm extends Component {
                     <input placeholder="Genre Name" onChange={this.onChangeInput} value={this.state.name} type="text"/>
                     <input type="submit" value="ADD"/>
                 </form>
-                {this.props.errorMessage && <p style={{color : 'red'}}>{this.props.errorMessage}</p> }
+                {this.props.errorMessage && <p style={{color: 'red'}}>{this.props.errorMessage}</p>}
             </div>
         );
     }
@@ -51,9 +51,9 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
     return {
-        newGenre : state.genres.newGenre,
-        errorMessage : state.genres.errorMessage
+        genres: state.genres.genres,
+        errorMessage: state.genres.errorMessage
     }
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(AddGenreForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AddGenreForm);

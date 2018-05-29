@@ -8,14 +8,16 @@ class GenresList extends Component {
 
     getGenres = () => {
         console.log('Genres', this.props);
-        return this.props.genres.map(genre => {
-            return (
+        if(this.props.genres){
+            return this.props.genres.map(genre => {
+                return (
                     <li key={genre.id}>{genre.name}
                         <button onClick={() => this.onEditGenre(genre)}>[/]</button>
-                        <button>[X]</button>
+                        <button onClick={()=>this.onDeleteGenre(genre)}>[X]</button>
                     </li>
-            )
-        });
+                )
+            });
+        }
     };
 
     onEditGenre = (genre) => {
@@ -23,15 +25,12 @@ class GenresList extends Component {
         this.props.editGenre(genre.id, newGenreName)
     };
 
+    onDeleteGenre = (genre) =>{
+        this.props.deleteGenre(genre.id);
+    };
 
     componentDidMount() {
         this.props.loadGenres();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.newGenre) {
-            this.props.genres.push(nextProps.newGenre);
-        }
     }
 
 
@@ -48,7 +47,6 @@ class GenresList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        newGenre: state.genres.newGenre,
         genres: state.genres.genres
     }
 };

@@ -37,20 +37,31 @@ export default function reducer(state = initialState, action) {
         case ADD_GENRES_SUCCESS:
             return {
                 ...state,
-                newGenre : action.payload.data,
+                genres: [...state.genres, action.payload.data],
                 errorMessage: null
             };
 
         case EDIT_GENRES_SUCCESS:
+
+            const editedGenre = action.payload.data;
+
+            //Edit data
+            const itemIndex = state.genres.findIndex(item => item.id === editedGenre.id);
+            const genresCopy = [...state.genres];
+            genresCopy[itemIndex] = editedGenre;
+
+
+            //Returning new state
             return {
                 ...state,
-                editedGenre : action.payload.data
+                genres : genresCopy
             };
 
         case DELETE_GENRES_SUCCESS:
             return {
                 ...state,
-                deletedGenre : action.payload.data
+                genres: state.genres.filter(genre => genre.id !== action.payload.data.id),
+                errorMessage: null
             };
 
         case ADD_GENRES_FAIL:
@@ -59,7 +70,7 @@ export default function reducer(state = initialState, action) {
             console.log(action);
             return {
                 ...state,
-                errorMessage : action.error.response.data.message
+                errorMessage: action.error.response.data.message
             };
 
         default:
@@ -68,7 +79,7 @@ export default function reducer(state = initialState, action) {
 }
 
 //Action
-export const loadGenres = () =>  {
+export const loadGenres = () => {
     console.log('Loading genres');
     return {
         type: GET_GENRES,
@@ -82,13 +93,13 @@ export const loadGenres = () =>  {
 
 export const addGenre = (name) => {
     return {
-        type : ADD_GENRES,
-        payload:{
+        type: ADD_GENRES,
+        payload: {
             request: {
-                method : 'POST',
-                url : '/genres',
-                data : {
-                    name : name
+                method: 'POST',
+                url: '/genres',
+                data: {
+                    name: name
                 }
             }
         }
@@ -97,13 +108,13 @@ export const addGenre = (name) => {
 
 export const editGenre = (id, name) => {
     return {
-        type : EDIT_GENRES,
-        payload:{
+        type: EDIT_GENRES,
+        payload: {
             request: {
-                method : 'PUT',
-                url : `/genres/${id}`,
-                data : {
-                    name : name
+                method: 'PUT',
+                url: `/genres/${id}`,
+                data: {
+                    name: name
                 }
             }
         }
@@ -112,11 +123,11 @@ export const editGenre = (id, name) => {
 
 export const deleteGenre = (id) => {
     return {
-        type : DELETE_GENRES,
-        payload:{
+        type: DELETE_GENRES,
+        payload: {
             request: {
-                method : 'DELETE',
-                url : `/genres/${id}`
+                method: 'DELETE',
+                url: `/genres/${id}`
             }
         }
     }
