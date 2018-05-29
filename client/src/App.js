@@ -1,33 +1,23 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import './App.css';
+import GenresList from './components/GenresList';
+import AddGenreForm from './components/AddGenreForm';
 
 class App extends Component {
 
-    state = {
-        response: ''
-    };
-
-    componentDidMount() {
-        this.callApi()
-            .then(res => this.setState({ response: res.genres }))
-            .catch(err => console.log(err));
-    }
-
-    callApi = async () => {
-        const response = await fetch('/api/genres');
-        const body = await response.json();
-
-        if (response.status !== 200) throw Error(body.genres);
-
-        return body;
-    };
-
     render() {
         return (
-            <div>
 
-            </div>
+                <div style={{padding: 10}}>
+
+                    <h2>Add Genre</h2>
+                    <AddGenreForm/>
+
+                    <hr/>
+
+                    <h2>All Genres</h2>
+                    <GenresList/>
+                </div>
         );
     }
 }
