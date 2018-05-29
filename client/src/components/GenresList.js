@@ -1,28 +1,26 @@
 // @flow
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {loadGenres, editGenre, deleteGenre} from '../redux/actions/genresActions';
+import {deleteGenre, editGenre, loadGenres} from '../redux/actions/genresActions';
 
 class GenresList extends Component {
 
-
-    constructor(props) {
-        super(props);
-
-    }
 
     getGenres = () => {
         console.log('Genres', this.props);
         return this.props.genres.map(genre => {
             return (
-                <li key={genre.id}>{genre.name} <a href="#" onClick={()=>this.onEditGenre(genre)}>[/]</a> <a href="#">[X]</a></li>
+                    <li key={genre.id}>{genre.name}
+                        <button onClick={() => this.onEditGenre(genre)}>[/]</button>
+                        <button>[X]</button>
+                    </li>
             )
         });
     };
 
-    onEditGenre= (genre) => {
+    onEditGenre = (genre) => {
         const newGenreName = prompt('Enter new genre name', genre.name);
-
+        this.props.editGenre(genre.id, newGenreName)
     };
 
 

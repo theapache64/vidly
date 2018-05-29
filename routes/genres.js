@@ -24,7 +24,7 @@ app.post('/', (req, resp) => {
     const {error} = validateGenre(req.body);
 
     if (error) {
-        return resp.status(400).send(error.details[0].message);
+        return resp.status(400).send(toError(error.details[0].message));
     }
 
     const lastGenre = genreRealm.objects('Genre').sorted('id', true)[0];
@@ -40,6 +40,11 @@ app.post('/', (req, resp) => {
     resp.send(newGenre);
 });
 
+const toError = (message) => {
+    return {
+        message: message
+    }
+};
 
 //UPDATE
 app.put('/:id', (req, resp) => {
@@ -50,12 +55,12 @@ app.put('/:id', (req, resp) => {
         .objectForPrimaryKey('Genre', parseInt(req.params.id));
 
     if (!genre) {
-        return resp.status(404).send(`Invalid genre ID ${req.params.id}`);
+        return resp.status(404).send(toError(`Invalid genre ID ${req.params.id}`));
     }
 
     const {error} = validateGenre(req.body);
     if (error) {
-        return resp.status(400).send(error.details[0].message);
+        return resp.status(400).send(toError(error.details[0].message));
     }
 
     //Updates
@@ -73,7 +78,7 @@ app.delete('/:id', (req, resp) => {
     const genre = genreRealm.objectForPrimaryKey('Genre', parseInt(req.params.id));
 
     if (!genre) {
-        return resp.status(404).send(`Invalid genre ID ${req.params.id}`);
+        return resp.status(404).send(oError(`Invalid genre ID ${req.params.id}`));
     }
 
     //Copy object

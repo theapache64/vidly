@@ -26,12 +26,9 @@ const initialState = {
 //Reducer
 export default function reducer(state = initialState, action) {
 
-    console.log(action);
-
     switch (action.type) {
 
         case GET_GENRES_SUCCESS:
-            console.log('GET_GENRES_SUCCESS is ', action);
             return {
                 ...state,
                 genres: action.payload.data.genres
@@ -40,11 +37,13 @@ export default function reducer(state = initialState, action) {
         case ADD_GENRES_SUCCESS:
             return {
                 ...state,
-                newGenre : action.payload.data
+                newGenre : action.payload.data,
+                errorMessage: null
             };
 
         case EDIT_GENRES_SUCCESS:
             return {
+                ...state,
                 editedGenre : action.payload.data
             };
 
@@ -52,6 +51,15 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 deletedGenre : action.payload.data
+            };
+
+        case ADD_GENRES_FAIL:
+        case EDIT_GENRES_FAIL:
+        case DELETE_GENRES_FAIL:
+            console.log(action);
+            return {
+                ...state,
+                errorMessage : action.error.response.data.message
             };
 
         default:
@@ -89,7 +97,7 @@ export const addGenre = (name) => {
 
 export const editGenre = (id, name) => {
     return {
-        type : ADD_GENRES,
+        type : EDIT_GENRES,
         payload:{
             request: {
                 method : 'PUT',
@@ -104,7 +112,7 @@ export const editGenre = (id, name) => {
 
 export const deleteGenre = (id) => {
     return {
-        type : ADD_GENRES,
+        type : DELETE_GENRES,
         payload:{
             request: {
                 method : 'DELETE',
