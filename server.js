@@ -13,6 +13,6 @@ app.get('/', (req, resp) => {
 
 const port = process.env.PORT || 7777;
 
-app.listen(7777, () => {
+app.listen(port, () => {
     console.log(`Listening to ${port}`);
 });
